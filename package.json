@@ -14,6 +14,9 @@
     "importer",
     "json"
   ],
+  "bin": {
+    "say-hello": "./test.js"
+  },
   "scripts": {
     "compile": "mkdirp dist && babel src -d dist",
     "prepublish": "npm run compile",
@@ -27,7 +30,8 @@
   },
   "dependencies": {
     "babel-jest": "^24.9.0",
-    "babel-preset-env": "^1.7.0",
+    "@babel/preset-env": "^7.2.0",
+    "@babel/polyfill": "^7.4.3",
     "es6-map": "^0.1.1",
     "is-glob": "^2.0.0",
     "is-there": "^4.0.0",

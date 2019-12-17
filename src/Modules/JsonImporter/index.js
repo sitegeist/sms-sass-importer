@@ -2,7 +2,7 @@ import isThere  from 'is-there';
 import path, {resolve, basename, extname} from 'path';
 import _ from "lodash";
 
-export default function (url,prev, options)  {
+export default function (url,prev, options = false)  {
   let includePaths = options.includePaths ? options.includePaths.split(path.delimiter) : [];
   let paths = []
     .concat(prev.slice(0, prev.lastIndexOf('/')))

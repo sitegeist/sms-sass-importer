@@ -1,24 +1,32 @@
-import path from 'path';
 import {isJSONfile} from './Helper';
-import Importer from './Modules/Importer';
+import PrefixImporter from './Modules/PrefixImporter';
 import JsonImporter from './Modules/JsonImporter';
+import {getPrefixConfig} from './Helper';
 
-import 'json5/lib/register'; // Enable JSON5 support
+import {ImportPathResolver} from './Helper/ImportPathResolver';
+
+import 'json5/lib/register';
+
+const importPathResolver = new ImportPathResolver();
 
 export default () => {
+
   return function(url, prev, done) {
+
     if (isJSONfile(url)) {
-        return JsonImporter(url, prev, this.options)
+        return JsonImporter(url, prev)
     }
 
-    let filePath = path.join(path.dirname(prev), url);
-
-    return Importer(filePath, url, done)
+    getPrefixConfig()
+        .then((config) => {
+            importPathResolver.initialPreviousResolvedPath = prev;
+            importPathResolver.importFilePath = url;
+            const filePath = importPathResolver.resolvedFilePath;
+            return PrefixImporter(filePath, done, config)
+        })
+        .catch(data => ( console.log(data)  ));
   }
 }
-
-
-
 
 // Super-hacky: Override Babel's transpiled export to provide both
 // a default CommonJS export and named exports.
