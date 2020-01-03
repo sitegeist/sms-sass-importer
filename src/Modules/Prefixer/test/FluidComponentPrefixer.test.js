@@ -1,12 +1,12 @@
-import FluidComponentPrefixer from "../";
+import Prefixer from "../";
 import stringHash from "string-hash";
-import {resolveEnvironmentRelativeComponentPath} from "../../PathHelper";
+import {resolveEnvironmentRelativeComponentPath} from "../../../Util/PathHelper";
 
 const fs = require('fs');
 require('regenerator-runtime/runtime');
 jest.mock('fs')
 
-const fixturePath = 'src/Modules/FluidComponentPrefixer/test/fixtures';
+const fixturePath = 'src/Modules/Prefixer/test/fixtures';
 
 
 describe('buildPrefixedContent', () => {
@@ -23,7 +23,7 @@ describe('buildPrefixedContent', () => {
       '    display:none;\n' +
       '}\n'
 
-    expect(FluidComponentPrefixer.buildPrefixedContent('prefix-', fileContent)).toBe(result);
+    expect(Prefixer.buildPrefixedContent('prefix-', fileContent)).toBe(result);
 
   })
 
@@ -39,7 +39,7 @@ describe('getPrefixedContent', () => {
   it('getPrefixedContent rejects because empty array passed...', () => {
     expect.assertions(1);
     const err = new Error('no valid path provided to importer');
-    return FluidComponentPrefixer.getPrefixedContent([]).catch(data => expect(data).toEqual(err));
+    return Prefixer.getPrefixedContent([]).catch(data => expect(data).toEqual(err));
   });
 
   it('getPrefixedContent resolve array with prefixed data/ non prefixed data', () => {
@@ -68,7 +68,7 @@ describe('getPrefixedContent', () => {
     fs.readFileSync.mockReturnValueOnce(fileContentOnce);
     fs.readFileSync.mockReturnValueOnce(fileContentTwice);
 
-    return FluidComponentPrefixer.getPrefixedContent(['/component/componentPath/testOnce', '/component/componentPath/testTwice']).then(data => expect(data).toEqual(result));
+    return Prefixer.getPrefixedContent(['/component/componentPath/testOnce', '/component/componentPath/testTwice']).then(data => expect(data).toEqual(result));
   });
 
 });
@@ -79,7 +79,7 @@ describe('buildPrefix', () => {
     const result = 'cj7w1-';
 
     expect(
-      FluidComponentPrefixer.buildPrefix(`${fixturePath}/usePrefixResult.scss`))
+      Prefixer.buildPrefix(`${fixturePath}/usePrefixResult.scss`))
       .toBe(result);
   });
 
@@ -89,7 +89,7 @@ describe('buildPrefix', () => {
 
 test('it should return a path to a filename including a scss file extension', () => {
   fs.existsSync.mockReturnValue(true);
-  expect(FluidComponentPrefixer.resolveFilePath(`${fixturePath}/usePrefixResult`))
+  expect(Prefixer.resolveFilePath(`${fixturePath}/usePrefixResult`))
     .toBe(`${fixturePath}/usePrefixResult.scss`);
 });
 
@@ -97,14 +97,14 @@ test('it should return a path to a filename including a scss file extension', ()
 test('it should return a path to a filename including a scss file widht underscore extension', () => {
   fs.existsSync.mockReturnValueOnce(false);
   fs.existsSync.mockReturnValueOnce(true);
-  expect(FluidComponentPrefixer.resolveFilePath(`${fixturePath}/usePrefixResult`))
+  expect(Prefixer.resolveFilePath(`${fixturePath}/usePrefixResult`))
     .toBe(`${fixturePath}/_usePrefixResult.scss`);
 });
 
 test('it should return false', () => {
   fs.existsSync.mockReturnValueOnce(false);
   fs.existsSync.mockReturnValueOnce(false);
-  expect(FluidComponentPrefixer.resolveFilePath(`${fixturePath}/usePrefixResult`))
+  expect(Prefixer.resolveFilePath(`${fixturePath}/usePrefixResult`))
     .toBe(false);
 });
 
@@ -126,13 +126,13 @@ describe('writePrefixJson', () => {
 
   it('it should be able to call fs.writeFile', () => {
     fs.existsSync.mockReturnValueOnce(false);
-    FluidComponentPrefixer.writePrefixJson(fileName, 'jfwioj')
+    Prefixer.writePrefixJson(fileName, 'jfwioj')
     expect(fs.writeFile).toHaveBeenCalled();
   })
 
   it('it should not be able to call fs.writeFile', () => {
     fs.existsSync.mockReturnValueOnce(true);
-    FluidComponentPrefixer.writePrefixJson(fileName, 'jfwioj')
+    Prefixer.writePrefixJson(fileName, 'jfwioj')
     expect(fs.writeFile).toHaveBeenCalledTimes(0)
   })
 

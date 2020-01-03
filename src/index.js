@@ -1,30 +1,32 @@
-import {isJSONfile} from './Helper';
-import PrefixImporter from './Modules/PrefixImporter';
-import JsonImporter from './Modules/JsonImporter';
-import {getPrefixConfig} from './Helper';
-
-import {ImportPathResolver} from './Helper/ImportPathResolver';
+import {prefixImporter} from './Modules/PrefixImporter';
+import {jsonImporter, isJSONfile} from './Modules/JsonImporter';
+import {getPrefixConfig} from './Util/PrefixConfig';
+import {ImportPathResolver} from './Util/ImportPathResolver';
 
 import 'json5/lib/register';
 
 const importPathResolver = new ImportPathResolver();
+
+const importIterationCounter = [];
 
 export default () => {
 
   return function(url, prev, done) {
 
     if (isJSONfile(url)) {
-        return JsonImporter(url, prev)
+        return jsonImporter(url, prev)
     }
 
     getPrefixConfig()
         .then((config) => {
+            importIterationCounter.push(1);
             importPathResolver.initialPreviousResolvedPath = prev;
             importPathResolver.importFilePath = url;
             const filePath = importPathResolver.resolvedFilePath;
-            return PrefixImporter(filePath, done, config)
+            return prefixImporter(filePath, done, config, importIterationCounter.length);
         })
         .catch(data => ( console.log(data)  ));
+
   }
 }
 

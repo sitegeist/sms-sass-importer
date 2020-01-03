@@ -1,31 +1,40 @@
+const fs = require('fs');
 import path from 'path';
 import Map from 'es6-map';
 import isGlob from 'is-glob';
 import sort from 'sort-object';
 import mapFiles from 'map-files';
-import FluidComponentPrefixer from "../FluidComponentPrefixer/";
-import {resolveSassImportPath, resolveEnvironmentRelativeComponentPath} from "../PathHelper/";
+import Prefixer from "../Prefixer/";
+import {writePrefixJson} from "../../Util/WritePrefixJson";
+import {resolveSassImportPath, resolveEnvironmentRelativeComponentPath} from "../../Util/PathHelper";
 
-export default function (base, done, config) {
+export function prefixImporter (base, done, config, importIterationCounter) {
 
+    const aliases = new Map();
 
-  const aliases = new Map();
+    if (aliases.has(base)) {
+        return done(aliases.get(base));
+    }
 
-  if (aliases.has(base)) {
-    return done(aliases.get(base));
-  }
+    let paths = [];
+    const jsonData = [];
+    if (isGlob(base)) {
+        const files = sort(mapFiles(base));
+        paths = Object.keys(files).map((key) => resolveSassImportPath(files[key].path));
+    } else {
+        paths.push(resolveSassImportPath(base))
+    }
 
-  let paths = [];
-  const jsonData = [];
-  if (isGlob(base)) {
-    const files = sort(mapFiles(base));
-    paths = Object.keys(files).map((key) => resolveSassImportPath(files[key].path));
-  } else {
-    paths.push(resolveSassImportPath(base))
-  }
+    const prefixJsonPath = `${config.prefixpath}/prefix.json`;
 
-  FluidComponentPrefixer.getPrefixedContent(paths, config.prefixSalt)
-  .then((contentData) => {
+    // on first import remove json file with prefix data
+    if (fs.existsSync(prefixJsonPath) && importIterationCounter === 1) {
+        console.log(importIterationCounter);
+        fs.unlinkSync(prefixJsonPath)
+    }
+
+    Prefixer.getPrefixedContent(paths, config.prefixSalt)
+    .then((contentData) => {
       let processedContent = '';
 
       contentData.forEach((data, index) => {
@@ -39,8 +48,7 @@ export default function (base, done, config) {
       })
 
       if(jsonData.length) {
-          // TODO REMOVE FROM JSON IF PREFIXING ON A FILE WAS REVERTED
-          FluidComponentPrefixer.writePrefixJson(jsonData, config.prefixpath)
+          writePrefixJson(jsonData, prefixJsonPath)
               .then(console.log)
               .catch(data => ( console.log(data)  ));
       }

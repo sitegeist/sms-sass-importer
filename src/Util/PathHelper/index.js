@@ -35,6 +35,8 @@ export const resolveSassImportPath = (filePath) => {
  * @return {string} resolved file path
  */
 export const resolveEnvironmentRelativeComponentPath = (componentPath) => {
-  return `ext${componentPath.split('ext')[1]}`;
+  const currentWorkingDirSplit = process.cwd().split('/');
+  const currentWorkingDirFolderName = currentWorkingDirSplit[currentWorkingDirSplit.length - 1]
+  return componentPath.split(currentWorkingDirFolderName)[1];
 }
 
