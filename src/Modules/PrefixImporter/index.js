@@ -11,21 +11,20 @@ import {resolveSassImportPath, resolveEnvironmentRelativeComponentPath} from "..
 export function prefixImporter (base, done, config, importIterationCounter) {
 
     const aliases = new Map();
+    const prefixJsonPath = `${config.prefixpath}/prefix.json`;
 
     if (aliases.has(base)) {
         return done(aliases.get(base));
     }
 
     let paths = [];
-    const jsonData = [];
+
     if (isGlob(base)) {
         const files = sort(mapFiles(base));
         paths = Object.keys(files).map((key) => resolveSassImportPath(files[key].path));
     } else {
         paths.push(resolveSassImportPath(base))
     }
-
-    const prefixJsonPath = `${config.prefixpath}/prefix.json`;
 
     // on first import remove json file with prefix data
     if (fs.existsSync(prefixJsonPath) && importIterationCounter === 1) {
@@ -36,6 +35,7 @@ export function prefixImporter (base, done, config, importIterationCounter) {
     Prefixer.getPrefixedContent(paths, config.prefixSalt)
     .then((contentData) => {
       let processedContent = '';
+      const jsonData = [];
 
       contentData.forEach((data, index) => {
         processedContent += data.content
