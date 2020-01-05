@@ -19,7 +19,6 @@ export const writePrefixJson = (prefixData, prefixJsonPath) => {
             const prefixJsonData = JSON.parse(prefixJsonFile);
             const concatArray = prefixData.concat(prefixJsonData);
             jsonResults = JSON.stringify(concatArray.filter((v,i,a)=>a.findIndex(t=>(t.prefix === v.prefix))===i));
-            resolveMessage = `updadet ${prefixJsonPath}`;
         } else {
             jsonResults = JSON.stringify(prefixData);
             resolveMessage = `created ${prefixJsonPath}`;

@@ -5,11 +5,6 @@ var importer = require('../dist/index');
 var _UtilPrefixConfig = require('../dist/Util/PrefixConfig');
 var fs = require('fs');
 
-
-Object.defineProperty(exports, '__esModule', {
-    value: true
-});
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 importer = _interopRequireDefault(importer);
@@ -17,12 +12,11 @@ importer = _interopRequireDefault(importer);
 var config = (0, _UtilPrefixConfig.getPrefixConfig)();
 var nodeSassOptions = config.nodeSassOptions;
 
-
 sass.render({
     file: nodeSassOptions.file,
     outputStyle: nodeSassOptions.outputStyle,
     outFile: nodeSassOptions.outFile,
-    sourceMap: nodeSassOptions.sourceMap, // or an absolute or relative (to outFile) path
+    sourceMap: nodeSassOptions.sourceMap,
     importer: (0, importer['default'])(),
 },function(err, result) {
         if (!err) {
