@@ -17,16 +17,13 @@ export default () => {
         return jsonImporter(url, prev)
     }
 
-    getPrefixConfig()
-        .then((config) => {
-            importIterationCounter.push(1);
-            importPathResolver.initialPreviousResolvedPath = prev;
-            importPathResolver.importFilePath = url;
-            const filePath = importPathResolver.resolvedFilePath;
-            return prefixImporter(filePath, done, config, importIterationCounter.length);
-        })
-        .catch(data => ( console.log(data)  ));
+    const config = getPrefixConfig();
 
+    importIterationCounter.push(1);
+    importPathResolver.initialPreviousResolvedPath = prev;
+    importPathResolver.importFilePath = url;
+    const filePath = importPathResolver.resolvedFilePath;
+    return prefixImporter(filePath, done, config, importIterationCounter.length);
   }
 }
 

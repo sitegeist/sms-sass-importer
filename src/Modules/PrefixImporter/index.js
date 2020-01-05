@@ -28,7 +28,6 @@ export function prefixImporter (base, done, config, importIterationCounter) {
 
     // on first import remove json file with prefix data
     if (fs.existsSync(prefixJsonPath) && importIterationCounter === 1) {
-        console.log(importIterationCounter);
         fs.unlinkSync(prefixJsonPath)
     }
 

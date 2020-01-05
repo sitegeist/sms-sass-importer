@@ -1,2 +1,2 @@
-import jsonImporter from './index';
-export default jsonImporter();
+import importer from './index';
+export default importer();
