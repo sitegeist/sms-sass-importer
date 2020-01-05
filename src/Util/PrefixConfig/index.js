@@ -20,19 +20,19 @@ export const getPrefixConfig = () => {
 
     try {
 
-        const jsonConfig = JSON.parse(configFile);
+        const config = JSON.parse(configFile);
 
-        if(!jsonConfig.prefixSalt) {
-            jsonConfig.prefixSalt = '';
+        if(!config.prefixSalt) {
+            config.prefixSalt = '';
         }
 
-        if(!jsonConfig.prefixpath) {
-            jsonConfig.prefixpath = path.resolve();
+        if(!config.prefixpath) {
+            config.prefixpath = path.resolve();
         } else {
-            jsonConfig.prefixpath = `${path.resolve()}/${jsonConfig.prefixpath}`;
+            config.prefixpath = `${path.resolve()}/${config.prefixpath}`;
         }
 
-        return jsonConfig;
+        return config;
     }
     catch(err) {
         return err;
