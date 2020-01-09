@@ -8,7 +8,7 @@ import {resolveEnvironmentRelativeComponentPath} from "../../Util/PathHelper";
  *
  * @param {Object} ast an abstract syntax tree
  * @param {string} prefix the prefix for the scss content
- * @return {String}
+ * @return {Object}
  */
 export const addPrefix = (ast, prefix) => {
     if (ast.type === 'class' && ast.children && ast.children[0]) {
