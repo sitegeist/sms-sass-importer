@@ -12,9 +12,27 @@ import {resolveEnvironmentRelativeComponentPath} from "../../Util/PathHelper";
  */
 export const addPrefix = (ast, prefix) => {
     if (ast.type === 'class' && ast.children && ast.children[0]) {
-      ast.children[0].value = `${prefix}${ast.children[0].value}`;
+      if(ast.children.length > 1) {
+        let fixedValueWithInterpolation = `${prefix}${ast.children[0].value}`
+        ast.children.forEach((child, index) => {
+          if(index > 0) {
+            switch (child.type) {
+              case "interpolation":
+                fixedValueWithInterpolation += `#{$${child.children[0].children[0].value}}`;
+                break;
+              case "ident":
+                fixedValueWithInterpolation += child.value;
+                break;
+            }
+            ast.children[index] = {};
+          }
+        });
+        ast.children[0].value = fixedValueWithInterpolation
+      } else {
+        ast.children[0].value = `${prefix}${ast.children[0].value}`;
+      }
     } else if (ast.children) {
-      ast.children.forEach(child => addPrefix(child, prefix));
+        ast.children.forEach(child => addPrefix(child, prefix));
     }
   return ast;
 };
