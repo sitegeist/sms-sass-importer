@@ -1,5 +1,5 @@
 {
-  "name": "sms-fluidcomponents-sass-importer",
+  "name": "sms-sass-importer",
   "version": "1.0.0",
   "description": "Allows importing json in sass files and enables selector prefixing",
   "main": "dist/index.js",
