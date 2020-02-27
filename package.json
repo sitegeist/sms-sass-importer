@@ -1,6 +1,6 @@
 {
   "name": "sms-sass-importer",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Allows importing json in sass files and enables selector prefixing",
   "main": "dist/index.js",
   "license": "MIT",
