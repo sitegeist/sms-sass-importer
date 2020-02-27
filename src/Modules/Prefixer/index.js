@@ -1,6 +1,6 @@
-import stringHash from "string-hash";
 import {parse, stringify} from 'sast';
 const fs = require('fs');
+const crypto = require('crypto');
 import {resolveEnvironmentRelativeComponentPath} from "../../Util/PathHelper";
 /**
  * sets the prefix in every class selector
@@ -13,7 +13,7 @@ import {resolveEnvironmentRelativeComponentPath} from "../../Util/PathHelper";
 export const addPrefix = (ast, prefix) => {
     if (ast.type === 'class' && ast.children && ast.children[0]) {
       if(ast.children.length > 1) {
-        let fixedValueWithInterpolation = `${prefix}${ast.children[0].value}`
+        let fixedValueWithInterpolation = `${prefix}${ast.children[0].value}`;
         ast.children.forEach((child, index) => {
           if(index > 0) {
             switch (child.type) {
@@ -27,7 +27,7 @@ export const addPrefix = (ast, prefix) => {
             ast.children[index] = {};
           }
         });
-        ast.children[0].value = fixedValueWithInterpolation
+        ast.children[0].value = fixedValueWithInterpolation;
       } else {
         ast.children[0].value = `${prefix}${ast.children[0].value}`;
       }
@@ -102,9 +102,10 @@ const getPrefixedContent = (paths, prefixSalt) => {
  * @return {String} the prefix
  */
 const buildPrefix = (filePath, prefixSalt) =>  {
-  const prefix = stringHash(prefixSalt + resolveEnvironmentRelativeComponentPath(filePath))
-    .toString(36)
-    .substr(0, 5);
+  
+  let prefix = crypto.createHash('md5').update(prefixSalt + resolveEnvironmentRelativeComponentPath(filePath)).digest('hex');
+  var firstLetter = prefix.match(/\D/).index;
+  prefix = prefix.substr(firstLetter, 5);
 
   return `${prefix}-`
 }

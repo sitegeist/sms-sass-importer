@@ -53,8 +53,8 @@ describe('getPrefixedContent', () => {
 
     const result = [
       {
-        content: fileContentOnce.replace('testOnce', '45h-testOnce'),
-        prefix: "45h-"
+        content: fileContentOnce.replace('testOnce', 'a86be-testOnce'),
+        prefix: "a86be-"
       },
       {
         content: fileContentTwice,
@@ -65,7 +65,7 @@ describe('getPrefixedContent', () => {
     fs.readFileSync.mockReturnValueOnce(fileContentOnce);
     fs.readFileSync.mockReturnValueOnce(fileContentTwice);
 
-    return Prefixer.getPrefixedContent(['/component/componentPath/testOnce', '/component/componentPath/testTwice']).then(data => expect(data).toEqual(result));
+    return Prefixer.getPrefixedContent(['/component/componentPath/testOnce', '/component/componentPath/testTwice'], 'test').then(data => expect(data).toEqual(result));
   });
 
 });
@@ -73,7 +73,19 @@ describe('getPrefixedContent', () => {
 describe('buildPrefix', () => {
 
   it('it should return a hash value created out of scss file path', () => {
-    const result = '1qq10-';
+    const result = 'be1c2-';
+
+    expect(
+      Prefixer.buildPrefix(`test/test.scss`, "salt"))
+      .toBe(result);
+  });
+
+});
+
+describe('buildPrefixStartsWithNumber', () => {
+
+  it('it should return a hash value created out of scss file path', () => {
+    const result = 'b5a1f-';
 
     expect(
       Prefixer.buildPrefix(`test/test.scss`, "testsalt"))
@@ -81,7 +93,6 @@ describe('buildPrefix', () => {
   });
 
 });
-
 
 describe('addPrefix', () => {
 
