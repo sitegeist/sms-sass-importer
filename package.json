@@ -1,12 +1,13 @@
 {
-  "name": "sms-sass-importer",
+  "name": "@sitegeist/sms-sass-importer",
   "version": "1.0.0",
   "description": "Allows importing json in sass files and enables selector prefixing",
+  "author": "Lukas Gurschler",
   "main": "dist/index.js",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/sitegeist/sms-sass-importer"
   },
   "keywords": [
     "sass",
